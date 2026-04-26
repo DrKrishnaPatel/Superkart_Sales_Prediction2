@@ -6,7 +6,7 @@ import os
 # for data preprocessing and pipeline creation
 from sklearn.model_selection import train_test_split
 # for converting text data in to numerical representation and scale numerical data
-from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder
+from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder, OrdinalEncoder
 # for hugging face space authentication to upload files
 from huggingface_hub import login, HfApi
 
@@ -25,15 +25,25 @@ df['Store_Establishment_Year'] = df['Store_Establishment_Year'].astype('category
 # Get Numerical Columns
 numerical_cols = df.select_dtypes(include=['number']).columns.tolist()
 
-# Get Categorical Columns (includes year_of_establishment)
-categorical_cols = df.select_dtypes(include=['object', 'category']).columns.tolist()
-# Returns True if the column has a defined logical order
-ordinal_cols = df['column_name'].cat.ordered
+# Define columns
+ordinal_cols = ['Product_Sugar_Content', 'Store_Size', 'Store_Location_City_Type']
 
-# Encoding the categorical columns
+# Check status safely
+for col in ordinal_cols:
+    if col in df.columns:
+        # Optional: Convert to category first if you want to use .cat
+        df[col] = df[col].astype('category')
+        print(f"{col} is ordered: {df[col].cat.ordered}")
+
+# Encode the columns properly
+from sklearn.preprocessing import LabelEncoder
 label_encoder = LabelEncoder()
-df[ordinal_cols] = label_encoder.fit_transform(df[ordinal_cols])
 
+for col in ordinal_cols:
+    if col in df.columns:
+        df[col] = label_encoder.fit_transform(df[col].astype(str))
+
+print("Encoding complete for ordinal columns.")
 
 target_col = 'Product_Store_Sales_Total'
 
