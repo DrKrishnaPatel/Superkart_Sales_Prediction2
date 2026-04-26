@@ -64,20 +64,21 @@ categorical_features = [
 categorical_cols = ['Product_Type', 'Store_Id', 'Store_Establishment_Year', 'Store_Type']
 ordinal_cols = ['Product_Sugar_Content', 'Store_Size', 'Store_Location_City_Type']
 
-# ... (all your imports remain the same) ...
 
 # Define the correct category orders for the OrdinalEncoder
 # Make sure these match the unique values in your CSV exactly
-sugar_order = ['Low Sugar', 'Medium Sugar', 'High Sugar']
-size_order = ['Small', 'Medium', 'High']
-city_order = ['Tier 3', 'Tier 2', 'Tier 1']
+Product_Sugar_Content = ['Low Sugar', 'Medium Sugar', 'High Sugar']
+Store_Size = ['Small', 'Medium', 'High']
+Store_Location_City_Type = ['Tier 3', 'Tier 2', 'Tier 1']
+
+Xtrain[ordinal_cols] = Xtrain[ordinal_cols].astype(str)
+Xtest[ordinal_cols] = Xtest[ordinal_cols].astype(str)
 
 # Create the preprocessor
 preprocessor = make_column_transformer(
     (StandardScaler(), numeric_features),
     (OneHotEncoder(handle_unknown='ignore'), categorical_cols),
-    # Pass the categories list here to maintain the rank
-    (OrdinalEncoder(categories=[sugar_order, size_order, city_order], 
+    (OrdinalEncoder(categories=[Product_Sugar_Content, Store_Size, Store_Location_City_Type], 
                     handle_unknown='use_encoded_value', 
                     unknown_value=-1), ordinal_cols)
 )
