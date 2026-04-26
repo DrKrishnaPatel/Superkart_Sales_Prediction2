@@ -16,6 +16,19 @@ jobs:
           ls -R
       - name: Install Dependencies
         run: pip install -r superkart_project/deployment/requirements.txt
+# ADD DEBUG STEP HERE
+      - name: Debug Token Presence
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "Error: HF_TOKEN is empty! Check your GitHub Secrets."
+            exit 1
+          else
+            echo "Success: HF_TOKEN is found."
+            echo "Length of token: ${#HF_TOKEN} characters"
+            echo "First 3 characters: ${HF_TOKEN:0:3}..."
+          fi
       - name: Upload Dataset to Hugging Face Hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
