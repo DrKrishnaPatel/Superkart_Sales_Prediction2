@@ -5,7 +5,7 @@ import joblib
 # import requests # Not needed if batch prediction is handled locally without API call
 
 # Download and load the model
-model_path = hf_hub_download(repo_id="drkrishnapatel/SuperkartSalesPrediction", filename="best_superkart_product_sale_model_v1.joblib")
+model_path = hf_hub_download(repo_id="drkrishnapatel/SuperkartSalesPrediction", filename="best_superkart_product_sales_model_v1.joblib")
 model = joblib.load(model_path)
 
 # Streamlit UI for Superkart Sales Prediction
