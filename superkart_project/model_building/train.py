@@ -173,7 +173,7 @@ with mlflow.start_run():
     repo_id = "drkrishnapatel/SuperkartSalesPrediction"
     repo_type = "model"
 
-    try:
+try:
     api.repo_info(repo_id=repo_id, repo_type="model")
     print(f"Repo '{repo_id}' already exists.")
 except RepositoryNotFoundError:
