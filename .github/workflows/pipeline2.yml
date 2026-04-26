@@ -15,7 +15,9 @@ jobs:
           echo "Listing all files (recursive):"
           ls -R
       - name: Install Dependencies
-        run: pip install -r superkart_project/deployment/requirements.txt
+        run: |
+          pip install "numpy<2"
+          pip install -r superkart_project/deployment/requirements.txt
 # ADD DEBUG STEP HERE
       - name: Debug Token Presence
         env:
@@ -46,7 +48,9 @@ jobs:
           echo "Listing all files (recursive):"
           ls -R
       - name: Install Dependencies
-        run: pip install -r superkart_project/deployment/requirements.txt
+        run: |
+          pip install "numpy<2"
+          pip install -r superkart_project/deployment/requirements.txt
       - name: Run Data Preparation
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -65,7 +69,9 @@ jobs:
           echo "Listing all files (recursive):"
           ls -R
       - name: Install Dependencies
-        run: pip install -r superkart_project/deployment/requirements.txt
+        run: |
+          pip install "numpy<2"
+          pip install -r superkart_project/deployment/requirements.txt
       - name: Start MLflow Server
         run: |
           nohup mlflow ui --host 0.0.0.0 --port 5001 &  # Run MLflow UI in the background
@@ -88,7 +94,9 @@ jobs:
           echo "Listing all files (recursive):"
           ls -R
       - name: Install Dependencies
-        run: pip install -r superkart_project/deployment/requirements.txt
+        run: |
+          pip install "numpy<2"
+          pip install -r superkart_project/deployment/requirements.txt
       - name: Push files to Frontend Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
