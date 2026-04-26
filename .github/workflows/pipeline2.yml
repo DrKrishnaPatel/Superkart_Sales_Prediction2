@@ -55,7 +55,7 @@ jobs:
         run: pip install -r superkart_project/deployment/requirements.txt
       - name: Start MLflow Server
         run: |
-          nohup mlflow ui --host 0.0.0.0 --port 5003 &  # Run MLflow UI in the background
+          nohup mlflow ui --host 0.0.0.0 --port 5001 &  # Run MLflow UI in the background
           sleep 5  # Wait for a moment to let the server starts
       - name: Model Building
         env:
