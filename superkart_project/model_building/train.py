@@ -17,7 +17,9 @@ from huggingface_hub.utils import RepositoryNotFoundError
 import mlflow
 
 
-mlflow.set_tracking_uri("http://localhost:5003")
+import mlflow
+# This tells MLflow to save logs to a folder named 'mlruns' in the runner
+mlflow.set_tracking_uri("file:./mlruns") 
 mlflow.set_experiment("mlops-training-experiment")
 
 
