@@ -64,26 +64,38 @@ categorical_features = [
 categorical_cols = ['Product_Type', 'Store_Id', 'Store_Establishment_Year', 'Store_Type']
 ordinal_cols = ['Product_Sugar_Content', 'Store_Size', 'Store_Location_City_Type']
 
-# Create a preprocessor for numerical and categorical features
+# ... (all your imports remain the same) ...
+
+# Define the correct category orders for the OrdinalEncoder
+# Make sure these match the unique values in your CSV exactly
+sugar_order = ['Low Sugar', 'Medium Sugar', 'High Sugar']
+size_order = ['Small', 'Medium', 'High']
+city_order = ['Tier 3', 'Tier 2', 'Tier 1']
+
+# Create the preprocessor
 preprocessor = make_column_transformer(
     (StandardScaler(), numeric_features),
     (OneHotEncoder(handle_unknown='ignore'), categorical_cols),
-    (OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1), ordinal_cols)
+    # Pass the categories list here to maintain the rank
+    (OrdinalEncoder(categories=[sugar_order, size_order, city_order], 
+                    handle_unknown='use_encoded_value', 
+                    unknown_value=-1), ordinal_cols)
 )
 
 # Define base XGBoost model
 xgb_regressor = xgb.XGBRegressor(random_state=42)
 
+# make_pipeline automatically names 'XGBRegressor' as 'xgbregressor' (lowercase)
+model_pipeline = make_pipeline(preprocessor, xgb_regressor)
+
 # Define hyperparameter grid
+# Ensure these names match the lowercase name of the class
 param_grid = {
-    'xgbregressor__n_estimators': [100, 200, 300],
-    'xgbregressor__max_depth': [3, 5, 7],
-    'xgbregressor__learning_rate': [0.01, 0.1, 0.2],
-    'xgbregressor__subsample': [0.7, 0.9, 1.0]
+    'xgbregressor__n_estimators': [100, 200],
+    'xgbregressor__max_depth': [3, 5],
+    'xgbregressor__learning_rate': [0.01, 0.1]
 }
 
-# Model pipeline
-model_pipeline = make_pipeline(preprocessor, ('xgbregressor', xgb_regressor))
 
 # Start MLflow run
 with mlflow.start_run():
@@ -172,7 +184,7 @@ with mlflow.start_run():
     # create_repo("churn-model", repo_type="model", private=False)
     api.upload_file(
         path_or_fileobj="best_superkart_product_sale_model_v1.joblib",
-        path_in_repo="best_superkart_product_sale_model_v1.joblib",
+        path_in_repo="best_superkart_product_sales_model_v1.joblib",
         repo_id=repo_id,
         repo_type=repo_type,
     )
