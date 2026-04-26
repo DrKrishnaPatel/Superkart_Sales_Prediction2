@@ -164,28 +164,27 @@ with mlflow.start_run():
     # Save the model locally
     model_path = "best_superkart_product_sales_model_v1.joblib"
     joblib.dump(best_model, model_path)
+    print(f"Model successfully saved locally as: {model_path}")
 
     # Log the model artifact
     mlflow.log_artifact(model_path, artifact_path="model")
-    print(f"Model saved as artifact at: {model_path}")
 
     # Upload to Hugging Face
     repo_id = "drkrishnapatel/SuperkartSalesPrediction"
     repo_type = "model"
 
-    # Step 1: Check if the space exists
     try:
-        api.repo_info(repo_id=repo_id, repo_type="model")
-        print(f"Space '{repo_id}' already exists. Using it.")
-    except RepositoryNotFoundError:
-        print(f"Space '{repo_id}' not found. Creating new space...")
-        create_repo(repo_id=repo_id, repo_type="model", private=False)
-        print(f"Space '{repo_id}' created.")
+    api.repo_info(repo_id=repo_id, repo_type="model")
+    print(f"Repo '{repo_id}' already exists.")
+except RepositoryNotFoundError:
+    print(f"Repo '{repo_id}' not found. Creating...")
+    create_repo(repo_id=repo_id, repo_type="model", private=False)
 
-    # create_repo("churn-model", repo_type="model", private=False)
-    api.upload_file(
-        path_or_fileobj="best_superkart_product_sale_model_v1.joblib",
-        path_in_repo="best_superkart_product_sales_model_v1.joblib",
-        repo_id=repo_id,
-        repo_type=repo_type,
-    )
+# Use the variable 'model_filename' for both paths
+api.upload_file(
+    path_or_fileobj=model_path,      # Local file
+    path_in_repo=model_path,         # Name in Hugging Face
+    repo_id=repo_id,
+    repo_type=repo_type,
+)
+print("Model successfully uploaded to Hugging Face!")
